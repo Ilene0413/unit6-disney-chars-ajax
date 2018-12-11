@@ -1,26 +1,30 @@
 $(document).ready(function () {
 
-    // Initial array of disney characthers
+    // Initial array of disney characters
     let topics = ["Mickey Mouse", "Minnie Mouse", "Donald Duck", "Pluto"];
 
-    //declare topics object to hold the api info needed for each character
+    // initialize variables 
+    // arrays to hold fixed and animated pictures so user can toggle back and forth
+    // holders 
 
-    let topicsArray = [
-        {
-            topicNum: [],
-            stillPic: [],
-            animatedPic: [],
-            rating: " ",
-            title: " "
-
-        }];
     let disneyChar;
+    let charFixedArray = [];
+    let charAnimatedArray = [];
+    let title;
+    let rating;
+    let picState;
+    let picValue;
 
     //create buttons from topics
-    //get disney character info from giphy and store in topics array
 
     disneyButtons();
 
+    //get disney character info from giphy 
+
+    $(document).on("click", ".disneyChar", getDisneyInfo);
+
+    // change picture to animated or still when clicked
+    $("#images-appear-here").on("click", ".character", changePicture);
 
     function disneyButtons() {
 
@@ -28,24 +32,25 @@ $(document).ready(function () {
         $("#buttons-view").empty();
 
         // create buttons by looping through topics array
-        for (var i = 0; i < topics.length; i++) {
+        for (let i = 0; i < topics.length; i++) {
 
             let disneyBtn = $("<button>");
             disneyBtn.addClass("disneyChar");
-            disneyBtn.attr("data-name", topics[i]);
+            disneyBtn.attr("char-name", topics[i]);
             disneyBtn.attr("value", i);
             disneyBtn.text(topics[i]);
             $("#buttons-view").append(disneyBtn).append("        ");
-            getDisneyInfo(i);
         }
     }
     // this function uses AJAX to obtain API info from giphy for
     // each character in topics array
 
-    function getDisneyInfo(topicNum) {
-        console.log("topic number in get disne info "+ topicNum);
-        disneyChar = topics[topicNum];
-        let queryURL = "https://api.giphy.com/v1/gifs/search?api_key=wr31u1ZrO2oB9emm2y2KAdcFudxUCC6X&limit=10&offset=0&lang=en&q=" + disneyChar;
+    function getDisneyInfo() {
+        console.log("in getdisneyinfo");
+        disneyChar = $(this).attr("char-name");
+        console.log("disney char " + disneyChar);
+        let queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+            disneyChar + "&api_key=wr31u1ZrO2oB9emm2y2KAdcFudxUCC6X&limit=10";
 
         $.ajax({
             url: queryURL,
@@ -55,30 +60,67 @@ $(document).ready(function () {
 
         }).then(function (response) {
 
-            // save data from API in results
+            // data from API in results
+            //maximum number of info wanted for each char is 10
+            //get still picture, animated picture, title and rating
 
             let results = response.data;
             let maxLength = 10;
             if (results.length < 10) {
                 maxLength = results.length;
             }
-            for (let j = 0; j < maxLength; j++) {
-                console.log("in j loop  " + j + "topics num " +topicNum);
-                console.log("ratings   "+ results[j].rating);
-                topicsArray[topicNum].rating = results[j].rating;
-                topicsArray[topicNum].title = results[j].title;
-                topicsArray[topicNum].stillPic[j] = results[j].images.original_still.url;
-                topicsArray[topicNum].stillPic[j] = results[j].url;
+            console.log("max length " + maxLength);
+            for (let i = 0; i < maxLength; i++) {
+                let gifDiv = $("<div>");
+                let charImg = $("<img>");
+                charImg.addClass("char-button character char-state");
+                //        charImg.attr("picValue", i);
+                //        charFixedArray[i] = results[i].images.original_still.url;
+                //        charImg.attr("data-still",charFixedArray[i]);
+                //       charImg.attr("src", charFixedArray[i]);
+                charImg.attr("data-still", results[i].images.original_still.url);
+                charImg.attr("src", results[i].images.original_still.url);
 
+                //    charAnimatedArray[i] = results[i].url;
+                //   charImg.attr("data-animate",charAnimatedArray[i]);
+                console.log("animated pic " + results[i].url);
+                charImg.attr("data-animate", results[i].url);
+
+                charImg.attr("image-state", "still");
+                title = results[i].title;
+                rating = results[i].rating;
+                let p1 = $("<p>").text("Title:  " + title + "     Rating:  " + rating);
+                gifDiv.append("<br>").append(charImg).append(p1);
+                $("#images-appear-here").prepend(gifDiv);
             }
         });
     }
+    function changePicture() {
+        //get state of picture
+        console.log("in change picture");
+        picState = $(this).attr("image-state");
+        //    picNum = $(this).attr("picValue");
+        let animatePic = $(this).attr("data-animate");
+        let stillPic = $(this).attr("data-still");
+        console.log("  pic state " + picState);
+        console.log(" data-animate " + animatePic);
+        console.log(" still pic " + stillPic);
 
-    // need to save 10 or less results (depends on number returned) to be displayed
-    // need to save animated pictures, still pictures, rating, and title for each  
+        // if still picture - change to animate and change attribute to animate
+        // if animated picture - change to still and change attribute to still
 
+        if (picState === "still") {
+    //        $(this).attr("src", $(this).attr(data-animate));
+            $(this).attr("src", animatePic);
+            $(this).attr("image-state", "animate");
+        }
+        else {
+    //        $(this).attr("src", $(this).attr("data-still"));
+    $(this).attr("src", stillPic);
 
-    // determine which disney character was selected and display info
-    // $(document).on("click", ".disneyChar", disneyCharInfo);
+            $(this).attr("image-state", "still");
+        }
+    }
+
 
 });
