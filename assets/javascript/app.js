@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     // Initial array of disney characters
-    let topics = ["Mickey Mouse", "Minnie Mouse", "Donald Duck", "Pluto"];
+    let topics = ["Mickey mouse", "Minnie mouse", "Donald duck", "Pluto"];
 
     // initialize variables 
     // arrays to hold fixed and animated pictures so user can toggle back and forth
@@ -37,13 +37,25 @@ $(document).ready(function () {
         // get text from input box
 
         disneyC = $("#disney-input").val().trim();
+        // if no input - do not want to put out a button
+        if (disneyC.length === 0) {
+            return;
+        }
 
+      
         //make first letter upper case - first slice letters starting from position 1
         //make first letter capital
         //join lower case with first letter
+
         lowerCaseDisney = disneyC.slice(1);
         disneyC = disneyC.charAt(0).toUpperCase();
         disneyC = disneyC + lowerCaseDisney;
+
+        // before adding to topics array, check if duplicate
+        if (topics.includes(disneyC)) {
+            $("#disney-input").val(" ");
+            return;
+        }
 
         // add disney character to topics array
 
@@ -101,6 +113,13 @@ $(document).ready(function () {
             $("#images-appear-here-2").empty();
 
             let results = response.data;
+
+            // check that data was obtained, if no data obtained send message
+
+            if (results.length === 0) {
+                $("#images-appear-here").text("No images found");
+                return;
+            }
             let maxLength = 10;
             if (results.length < 10) {
                 maxLength = results.length;
