@@ -26,6 +26,7 @@ $(document).ready(function () {
 
     // change picture to animated or still when clicked
     $("#images-appear-here").on("click", ".character", changePicture);
+    $("#images-appear-here-2").on("click", ".character", changePicture);
 
     //this function handles events when adding a disney character
     $("#add-disneyChar").on("click", function (event) {
@@ -56,7 +57,7 @@ $(document).ready(function () {
 
         disneyButtons();
 
-    })
+    });
 
     function disneyButtons() {
 
@@ -92,33 +93,47 @@ $(document).ready(function () {
         }).then(function (response) {
 
             // data from API in results
-            //maximum number of info wanted for each char is 10
+            //maximum number of info wanted for each character is 10
             //get still picture, animated picture, title and rating
-            //empty images from images-appear here to remove previous character images
+            //empty images to remove previous character images
 
             $("#images-appear-here").empty();
+            $("#images-appear-here-2").empty();
 
             let results = response.data;
             let maxLength = 10;
             if (results.length < 10) {
                 maxLength = results.length;
             }
+            let gifDiv = $("<div>");
+            let gifDiv2 = $("<div>");
+
             for (let i = 0; i < maxLength; i++) {
-                let gifDiv = $("<div>");
-                let charImg = $("<img>");
-                charImg.addClass("char-button character char-state");
+                let charImg = $("<img id='imgStyle'>");
+                charImg.addClass("char-button character char-pic-size");
                 charImg.attr("data-still", results[i].images.original_still.url);
                 charImg.attr("src", results[i].images.original_still.url);
                 charImg.attr("data-animate", results[i].images.fixed_width.url);
                 charImg.attr("image-state", "still");
+        //        $(".char-pic-size").css("width", 250);
+        //        $(".char-pic-size").css("height", 250);
+
                 let picType = results[i].type.toUpperCase();
                 title = results[i].title.replace(picType, "   ");
                 rating = results[i].rating.toUpperCase();
                 let p1 = $("<p class='para'>").text("Title:  " + title);
-                let p2 = $("<p class='para'>").text("Rating: " + rating); 
-                gifDiv.append(charImg).append("<br>").append(p1).append(p2).append("<br>");
-                $("#images-appear-here").prepend(gifDiv);
+                let p2 = $("<p class='para'>").text("Rating: " + rating);
+                // put 2 images per row
+                if (i % 2 === 0) {
+                    gifDiv2.append(charImg).append("<br>").append(p1).append(p2).append("<br>");
+                }
+                else {
+                    gifDiv.append(charImg).append("<br>").append(p1).append(p2).append("<br>");
+                }
+                $("#images-appear-here").append(gifDiv);
+                $("#images-appear-here-2").append(gifDiv2);
             }
+
         });
     }
     function changePicture() {

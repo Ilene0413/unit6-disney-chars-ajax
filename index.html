@@ -15,11 +15,25 @@
 <body>
 
     <div class="container">
-        <h1>Disney Character Search</h1>
-
-        <!--  Buttons -->
-        <div id="buttons-view"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 id="mainheader">Disney Character Search</h1>
+            </div>
+        </div>
         <br><br>
+        <!--  Buttons -->
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Click a button to see pictures of Disney characters</h3>
+                <br>
+                <h3>Click the picture to see the character move or
+                  add your favorite character to the list and watch them move</h3>
+            </div>
+            <div class="col-md-6">
+                <div id="buttons-view"></div>
+            </div>
+        </div>
+
         <!--  form to enter more characters -->
         <form id="disney-form">
             <label for="disney-input">Add a Disney Character</label>
@@ -28,7 +42,16 @@
         </form>
         <br><br>
         <!-- disney character images-->
-        <div id="images-appear-here"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="images-appear-here"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="images-appear-here-2"></div>
+                </div>
+            </div>
+        </div>
 
 
         <!--start disney project -->
