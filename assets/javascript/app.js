@@ -115,9 +115,6 @@ $(document).ready(function () {
                 charImg.attr("src", results[i].images.original_still.url);
                 charImg.attr("data-animate", results[i].images.fixed_width.url);
                 charImg.attr("image-state", "still");
-        //        $(".char-pic-size").css("width", 250);
-        //        $(".char-pic-size").css("height", 250);
-
                 let picType = results[i].type.toUpperCase();
                 title = results[i].title.replace(picType, "   ");
                 rating = results[i].rating.toUpperCase();
