@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
     // Initial array of disney characters
-    let topics = ["Mickey Mouse", "Minnie Mouse", "Donald Duck", "Pluto"];
+    let topics = ["Mickey mouse", "Minnie mouse", "Donald duck", "Pluto"];
 
     // initialize variables 
     // arrays to hold fixed and animated pictures so user can toggle back and forth
@@ -14,8 +14,7 @@ $(document).ready(function () {
     let rating;
     let picState;
     let disneyC;
-    // let lowerCaseWord;
-    //  let capitalWords;
+    let lowerCaseDisney
 
     //create buttons from topics
 
@@ -43,8 +42,14 @@ $(document).ready(function () {
             return;
         }
 
-        //make first letter of each word capital
-        disneyC = capitalLetters(disneyC);
+        
+        //make first letter upper case - first slice letters starting from position 1
+        //make first letter capital
+        //join lower case with first letter
+
+        lowerCaseDisney = disneyC.slice(1);
+        disneyC = disneyC.charAt(0).toUpperCase();
+        disneyC = disneyC + lowerCaseDisney;
 
         // before adding to topics array, check if duplicate
         if (topics.includes(disneyC)) {
@@ -66,35 +71,6 @@ $(document).ready(function () {
 
     });
 
-    function capitalLetters(capitalWords) {
-        //make first letter upper case - first slice letters starting from position 1
-        //make first letter capital
-        //join lower case with first letter
-
-        let lowerCaseWord = capitalWords.slice(1);
-        capitalWords = capitalWords.charAt(0).toUpperCase();
-        capitalWords = capitalWords + lowerCaseWord;
-
-        //if value of character is a space, then next letter is capitalized
-
-        for (i = 1; i < capitalWords.length; i++) {
-            if (capitalWords[i] == " ") {
-                //want first letter of next word capitalized; split the string
-                //first word is from position zero to current position
-                //remaining string is in lowerCaseWord, need to capitalize the first letter
-                //concatenate capital word with lower case word
-
-                lowerCaseWord = capitalWords.slice(i + 1);
-                capitalWords = capitalWords.substr(0, i);
-                let nextLetter = lowerCaseWord.charAt(0).toUpperCase();
-                lowerCaseWord = lowerCaseWord.slice(1);
-                capitalWords = capitalWords + " " + nextLetter + lowerCaseWord;
-            }
-
-        }
-        return capitalWords;
-
-    }
     function disneyButtons() {
 
         // Clear the disney characters buttons 
@@ -158,19 +134,9 @@ $(document).ready(function () {
                 charImg.attr("src", results[i].images.original_still.url);
                 charImg.attr("data-animate", results[i].images.fixed_width.url);
                 charImg.attr("image-state", "still");
-
-                //remove picture type from api title
-
                 let picType = results[i].type.toUpperCase();
-
-                //capitalize title from api title
-
-                title = results[i].title.replace(picType, "   ").trim();
-                title = capitalLetters(title);
-
-                //capitalize api rating
+                title = results[i].title.replace(picType, "   ");
                 rating = results[i].rating.toUpperCase();
-                
                 let p1 = $("<p class='para'>").text("Title:  " + title);
                 let p2 = $("<p class='para'>").text("Rating: " + rating);
                 // put 2 images per row
